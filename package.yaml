@@ -1,0 +1,38 @@
+name:                tinkoff-haskell
+version:             0.1.0.0
+github:              "Peltorator/tinkoff_haskell_2020"
+license:             MIT
+author:              "Egor Gorbachev"
+maintainer:          "peltorator@gmail.com"
+copyright:           "2020 Egor Gorbachev"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://https://github.com/Peltorator/tinkoff_haskell_2020>
+
+dependencies:
+- base >= 4.7 && < 5
+- hedgehog
+- HUnit
+- tasty
+- tasty-hedgehog
+- tasty-hunit
+- tasty-discover
+
+library:
+  source-dirs: src
+
+tests:
+  test:
+    main:                Test.hs
+    source-dirs:         test
+    dependencies:
+    - tinkoff-haskell
