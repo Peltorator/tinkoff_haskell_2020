@@ -9,46 +9,60 @@ import Prelude hiding (head, tail, take, drop, filter, foldl, foldr, concat, (++
 
 -- 1. head' возвращает первый элемент непустого списка
 head' :: [a] -> a
-head' (x:xs) = 
+head' (x:xs) = x
 
 -- 2. tail' возвращает список без первого элемента, для пустого - пустой
 tail' :: [a] -> [a]
-tail' = undefined
+tail' []     = []
+tail' (x:xs) = xs
 
 -- 3. take' возвращает первые n >= 0 элементов исходного списка; если n больше длины списка, то все элементы
 take' :: Int -> [a] -> [a]
-take' = undefined
+take' 0 xs = []
+take' n [] = []
+take' n xs = head' xs:take' (n - 1) (tail' xs)
 
 -- 4. drop' возвращает список без первых n >= 0 элементов; если n больше длины списка, то пустой список.
 drop' :: Int -> [a] -> [a]
-drop' = undefined
+drop' n [] = []
+drop' 0 x = x
+drop' n x = drop' (n - 1) (tail' x)
 
 -- 5. filter' возвращает список из элементов, для которых f возвращает True
 filter' :: (a -> Bool) -> [a] -> [a]
-filter' = undefined
+filter' f [] = []
+filter' f (x:xs) | f x = x:(filter' f xs)
+                 | otherwise = filter' f xs
 
 -- 6. zip' принимает два списка [a1, a2, ...] и [b1, b2, ...] и возвращает список [(a1, b1), (a2, b2), ...].
 -- Размер итогого списка равен размеру меньшего из входных списков.
 zip' :: [a] -> [b] -> [(a, b)]
-zip' = undefined
+zip' a [] = []
+zip' [] a = []
+zip' (x:xs) (y:ys) = (x, y):(zip' xs ys)
 
 -- 7. map' принимает на вход функцию и список и применяет функцию ко всем элементам списка
 map' :: (a -> b) -> [a] -> [b]
-map' = undefined
+map' f [] = []
+map' f (x:xs) = f x:map' f xs
 
 -- 8. foldr' последовательно применяет функцию f с конца
 -- foldr' (+) 0 [1, 2, 3] == (1 + (2 + (3 + 0)))
 -- foldr' (*) 4 [] == 4
 foldr' :: (b -> a -> a) -> a -> [b] -> a
-foldr' = undefined
+foldr' f d [] = d
+foldr' f d (x:xs) = f x (foldr' f d xs)
 
 -- 9. foldl' последовательно применяет функцию f с начала
 -- foldl' (+) 0 [1, 2, 3] == (((0 + 1) + 2) + 3)
 -- foldl' (*) 4 [] == 4
 foldl' :: (a -> b -> a) -> a -> [b] -> a
-foldl' = undefined
+foldl' f d [] = d
+foldl' f d (x:xs)=f (foldl' f d xs) x
 
 -- 10. concat' принимает на вход два списка и возвращает их конкатенацию
 -- concat' [1,2] [3] == [1,2,3]
 concat' :: [a] -> [a] -> [a]
-concat' = undefined
+concat' a [] = a
+concat' [] a = a
+concat' (x:xs) b = x:concat' xs b
