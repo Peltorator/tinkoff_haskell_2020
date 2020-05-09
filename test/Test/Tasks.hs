@@ -13,6 +13,7 @@ unit_head' = do
 unit_take' :: Assertion
 unit_take' = do
     take' 2 [1, 2, 3] @?= [1, 2]
+    take' 5 [1, 2, 3] @?= [1, 2, 3]
     take' 1 [239]     @?= [239]
     take' 0 [239]     @?= []
     take' 0 []        @?= ([]::[Int])
