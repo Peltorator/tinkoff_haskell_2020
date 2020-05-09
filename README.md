@@ -14,6 +14,11 @@
 
 [Преобразование функций в бесточечный вид](http://pointfree.io/)
 
+## Windows
+
+Я не знаю ничего про `windows`, слышал, что надо установить [Haskell Platform](https://www.haskell.org/platform/).
+Git вроде бы надо скачивать exe-шником [здесь](https://git-scm.com/download/win).
+
 ## Как установить git
 
 Открываем консоль/треминал.
