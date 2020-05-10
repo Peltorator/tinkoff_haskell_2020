@@ -9,23 +9,33 @@ import Prelude hiding (head, tail, take, drop, filter, foldl, foldr, concat, (++
 
 -- 1. head' возвращает первый элемент непустого списка
 head' :: [a] -> a
-head' = undefined
+head' (a:as) = a
 
 -- 2. tail' возвращает список без первого элемента, для пустого - пустой
 tail' :: [a] -> [a]
-tail' = undefined
+tail' [] = []
+tail' (a:as) = as
 
 -- 3. take' возвращает первые n >= 0 элементов исходного списка
 take' :: Int -> [a] -> [a]
-take' = undefined
+take' 0 as = []
+take' n (a:as) = a : (take' (n - 1) (as))
 
 -- 4. drop' возвращает список без первых n >= 0 элементов; если n больше длины списка, то пустой список.
 drop' :: Int -> [a] -> [a]
-drop' = undefined
+drop' 0 as = as
+drop' n [] = []
+drop' n (a:as) = drop' (n - 1) as
 
 -- 5. filter' возвращает список из элементов, для которых f возвращает True
+check' True a = [a]
+check' False a = []
+filter'' f False (a:as) = filter' (f) (as)
+filter'' f True (a:as) = a : filter' (f) (as)
+
 filter' :: (a -> Bool) -> [a] -> [a]
-filter' = undefined
+filter' f [] = []
+filter' f (a:as) = filter'' f (f a) (a:as) --(check' (f a) (a)) filter' (f) (as)
 
 -- 6. zip' принимает два списка [a1, a2, ...] и [b1, b2, ...] и возвращает список [(a1, b1), (a2, b2), ...].
 -- Размер итогого списка равен размеру меньшего из входных списков.
