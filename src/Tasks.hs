@@ -30,7 +30,7 @@ drop' n (x:xs) = drop' (n - 1) xs
 
 -- 5. filter' возвращает список из элементов, для которых f возвращает True
 filter' :: (a -> Bool) -> [a] -> [a]
-filter' f []                 = []
+filter' _ []                 = []
 filter' f (x:xs) | f x       = x:(filter' f xs)
                  | otherwise = filter' f xs
 
