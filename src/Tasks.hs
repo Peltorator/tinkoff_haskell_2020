@@ -18,52 +18,52 @@ tail' (_:xs) = xs
 
 -- 3. take' возвращает первые n >= 0 элементов исходного списка; если n больше длины списка, то все элементы
 take' :: Int -> [a] -> [a]
-take' 0 as     = []
+take' 0 xs     = []
 take' n []     = []
-take' n (a:as) = a : (take' (n - 1) as)
+take' n (a:xs) = a : (take' (n - 1) xs)
 
 -- 4. drop' возвращает список без первых n >= 0 элементов; если n больше длины списка, то пустой список.
 drop' :: Int -> [a] -> [a]
-drop' 0 as     = as
+drop' 0 xs     = xs
 drop' _ []     = []
-drop' n (a:as) = drop' (n - 1) as
+drop' n (a:xs) = drop' (n - 1) xs
 
 -- 5. filter' возвращает список из элементов, для которых f возвращает True
 
 filter' :: (a -> Bool) -> [a] -> [a]
 filter' f []                 = []
-filter' f (a:as) | (f a)     = a : (filter' f as)
-                 | otherwise = filter' f as
+filter' f (a:xs) | (f a)     = a : (filter' f xs)
+                 | otherwise = filter' f xs
 
 -- 6. zip' принимает два списка [a1, a2, ...] и [b1, b2, ...] и возвращает список [(a1, b1), (a2, b2), ...].
 -- Размер итогого списка равен размеру меньшего из входных списков.
 zip' :: [a] -> [b] -> [(a, b)]
 zip' []     _     = []
 zip' _     []     = []
-zip' (a:as) (b:bs) = (a, b) : zip' as bs
+zip' (a:xs) (b:ys) = (a, b) : zip' xs ys
 
 -- 7. map' принимает на вход функцию и список и применяет функцию ко всем элементам списка
 map' :: (a -> b) -> [a] -> [b]
 map' _ []     = []
-map' f (a:as) = f a : map' f as
+map' f (a:xs) = f a : map' f xs
 
 -- 8. foldr' последовательно применяет функцию f с конца
 -- foldr' (+) 0 [1, 2, 3] == (1 + (2 + (3 + 0)))
 -- foldr' (*) 4 [] == 4
 foldr' :: (b -> a -> a) -> a -> [b] -> a
-foldr' f a []     = a
-foldr' f a (b:bs) = f b $ foldr' f a bs
+foldr' _ a []     = a
+foldr' f a (b:ys) = f b $ foldr' f a ys
 
 -- 9. foldl' последовательно применяет функцию f с начала
 -- foldl' (+) 0 [1, 2, 3] == (((0 + 1) + 2) + 3)
 -- foldl' (*) 4 [] == 4
 foldl' :: (a -> b -> a) -> a -> [b] -> a
-foldl' f a []     = a
-foldl' f a (b:bs) = foldl' f (f a b) bs 
+foldl' _ a []     = a
+foldl' f a (b:ys) = foldl' f (f a b) ys 
 
 
 -- 10. concat' принимает на вход два списка и возвращает их конкатенацию
 -- concat' [1,2] [3] == [1,2,3]
 concat' :: [a] -> [a] -> [a]
-concat' []     as = as
-concat' (a:as) bs = a : concat' as bs
+concat' []     xs = xs
+concat' (a:xs) ys = a : concat' xs ys
