@@ -9,7 +9,7 @@ import Prelude hiding (head, tail, take, drop, filter, foldl, foldr, concat, (++
 
 -- 1. head' возвращает первый элемент непустого списка
 head' :: [a] -> a
-head' (x:xs) = 
+head' = undefined
 
 -- 2. tail' возвращает список без первого элемента, для пустого - пустой
 tail' :: [a] -> [a]
