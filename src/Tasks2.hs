@@ -10,33 +10,51 @@ module Tasks2 where
 -- обрезанную по длине самого короткого списка,
 -- то есть если на входе был список [[x1, x2, x3, x4], [y1, y2, y3], [z1, z2, z3, z4, z5]],
 -- то итоговым результатом должен быть сисок [x1 + y1 + z1, x2 + y2 + z2, x2 + y3 + z3].
+
+
 sum_of_lists :: Num a => [[a]] -> [a]
-sum_of_lists = undefined
+sum_of_lists []     = []
+sum_of_lists [x]    = x
+sum_of_lists (x:xs) = add (x) (sum_of_lists xs)
+    where add []      _     = []
+          add _      []     = []
+          add (x:xs) (y:ys) = (x + y) : add xs ys
 
 -- 12. n'thPrime принимает на вход число n >= 0 и возвращает n-е простое число.
-n'th_prime :: Int -> Int
-n'th_prime = undefined
+is_prime n i | (i * i > n)      = True
+             | (n `mod` i == 0) = False
+             | otherwise        = is_prime n $ i + 1
 
+n'th_prime :: Int -> Int
+n'th_prime n = helper n 2 
+    where 
+        helper (-1) a                  = a - 1
+        helper n    a | (is_prime a 2) = helper (n - 1) $ a + 1
+                      | otherwise      = helper n $ a + 1
 -- 13. tails' возвращает все хвосты входного списка,
 -- то есть если на входе был список [1, 2, 3],
 -- то итоговым результатом должен быть список [[1, 2, 3], [2, 3], [3], []]
 -- Необходимо реализовать функцию при помощи foldr.
 tails' :: [a] -> [[a]]
-tails' = undefined
+tails' xs = foldr add' [[]] xs
+     where add' a xs = (a : head xs) : xs
 
 -- 14. inits' возвращает все префиксы входного списка,
 -- то есть если на входе был список [1, 2, 3],
 -- то итоговым результатом должен быть список [[], [1], [1, 2], [1, 2, 3]]
 -- Необходимо реализовать функцию при помощи foldr.
 inits' :: [a] -> [[a]]
-inits' = undefined
+inits' xs = foldr add'' [[]] xs
+    where add'' a ys = [] : map (a:) ys
+
 
 -- 15. reverse' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldr.
 reverse' :: [a] -> [a]
-reverse' = undefined
+reverse' xs = foldr add_to_end [] xs 
+    where add_to_end a ys = ys ++ [a]
 
 -- 16. reverse'' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldl.
 reverse'' :: [a] -> [a]
-reverse'' = undefined
+reverse'' xs = foldl (flip (:)) [] xs

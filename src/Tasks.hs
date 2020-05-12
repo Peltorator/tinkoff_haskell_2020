@@ -20,27 +20,27 @@ tail' (_:xs) = xs
 take' :: Int -> [a] -> [a]
 take' 0 xs     = []
 take' n []     = []
-take' n (a:xs) = a : (take' (n - 1) xs)
+take' n (x:xs) = x : (take' (n - 1) xs)
 
 -- 4. drop' возвращает список без первых n >= 0 элементов; если n больше длины списка, то пустой список.
 drop' :: Int -> [a] -> [a]
 drop' 0 xs     = xs
 drop' _ []     = []
-drop' n (a:xs) = drop' (n - 1) xs
+drop' n (x:xs) = drop' (n - 1) xs
 
 -- 5. filter' возвращает список из элементов, для которых f возвращает True
 
 filter' :: (a -> Bool) -> [a] -> [a]
 filter' f []                 = []
-filter' f (a:xs) | (f a)     = a : (filter' f xs)
+filter' f (x:xs) | f x       = x : (filter' f xs)
                  | otherwise = filter' f xs
 
 -- 6. zip' принимает два списка [a1, a2, ...] и [b1, b2, ...] и возвращает список [(a1, b1), (a2, b2), ...].
 -- Размер итогого списка равен размеру меньшего из входных списков.
 zip' :: [a] -> [b] -> [(a, b)]
-zip' []     _     = []
-zip' _     []     = []
-zip' (a:xs) (b:ys) = (a, b) : zip' xs ys
+zip' []     _      = []
+zip' _     []      = []
+zip' (x:xs) (y:ys) = (x, y) : zip' xs ys
 
 -- 7. map' принимает на вход функцию и список и применяет функцию ко всем элементам списка
 map' :: (a -> b) -> [a] -> [b]
@@ -52,18 +52,18 @@ map' f (a:xs) = f a : map' f xs
 -- foldr' (*) 4 [] == 4
 foldr' :: (b -> a -> a) -> a -> [b] -> a
 foldr' _ a []     = a
-foldr' f a (b:ys) = f b $ foldr' f a ys
+foldr' f a (y:ys) = f y $ foldr' f a ys
 
 -- 9. foldl' последовательно применяет функцию f с начала
 -- foldl' (+) 0 [1, 2, 3] == (((0 + 1) + 2) + 3)
 -- foldl' (*) 4 [] == 4
 foldl' :: (a -> b -> a) -> a -> [b] -> a
-foldl' _ a []     = a
-foldl' f a (b:ys) = foldl' f (f a b) ys 
+foldl' _ x []     = x
+foldl' f x (y:ys) = foldl' f (f x y) ys 
 
 
 -- 10. concat' принимает на вход два списка и возвращает их конкатенацию
 -- concat' [1,2] [3] == [1,2,3]
 concat' :: [a] -> [a] -> [a]
 concat' []     xs = xs
-concat' (a:xs) ys = a : concat' xs ys
+concat' (x:xs) ys = x : concat' xs ys
