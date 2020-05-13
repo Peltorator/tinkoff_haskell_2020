@@ -1,5 +1,4 @@
-module Tasks2 where
-
+module Tasks2 where 
 -- Здесь уже можно пользоваться стандартными функциями из Prelude,
 -- но нельзя подключать другие модули (Data.Numbers.Primes и т.п.)ю
 --
@@ -13,30 +12,28 @@ module Tasks2 where
 
 
 sum_of_lists :: Num a => [[a]] -> [a]
-sum_of_lists []     = []
-sum_of_lists [x]    = x
-sum_of_lists (x:xs) = add (x) (sum_of_lists xs)
-    where add []      _     = []
-          add _      []     = []
-          add (x:xs) (y:ys) = (x + y) : add xs ys
+sum_of_lists = foldr (zipWith (+)) zeros
+    where zeros = 0 : zeros
 
 -- 12. n'thPrime принимает на вход число n >= 0 и возвращает n-е простое число.
-is_prime n i | (i * i > n)      = True
-             | (n `mod` i == 0) = False
-             | otherwise        = is_prime n $ i + 1
+
 
 n'th_prime :: Int -> Int
-n'th_prime n = helper n 2 
+n'th_prime = helper 2 
     where 
-        helper (-1) a                  = a - 1
-        helper n    a | (is_prime a 2) = helper (n - 1) $ a + 1
-                      | otherwise      = helper n $ a + 1
+        helper a (-1)                   = a - 1
+        helper a n     | (is_prime a 2) = helper (a + 1) $ n - 1
+                       | otherwise      = helper (a + 1) n
+
+        is_prime n i | (i * i > n)      = True
+                     | (n `mod` i == 0) = False
+                     | otherwise        = is_prime n $ i + 1
 -- 13. tails' возвращает все хвосты входного списка,
 -- то есть если на входе был список [1, 2, 3],
 -- то итоговым результатом должен быть список [[1, 2, 3], [2, 3], [3], []]
 -- Необходимо реализовать функцию при помощи foldr.
 tails' :: [a] -> [[a]]
-tails' xs = foldr add' [[]] xs
+tails' = foldr add' [[]]
      where add' a xs = (a : head xs) : xs
 
 -- 14. inits' возвращает все префиксы входного списка,
@@ -44,17 +41,17 @@ tails' xs = foldr add' [[]] xs
 -- то итоговым результатом должен быть список [[], [1], [1, 2], [1, 2, 3]]
 -- Необходимо реализовать функцию при помощи foldr.
 inits' :: [a] -> [[a]]
-inits' xs = foldr add'' [[]] xs
+inits' = foldr add'' [[]] 
     where add'' a ys = [] : map (a:) ys
 
 
 -- 15. reverse' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldr.
 reverse' :: [a] -> [a]
-reverse' xs = foldr add_to_end [] xs 
+reverse' = foldr add_to_end []
     where add_to_end a ys = ys ++ [a]
 
 -- 16. reverse'' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldl.
 reverse'' :: [a] -> [a]
-reverse'' xs = foldl (flip (:)) [] xs
+reverse'' = foldl (flip (:)) []
