@@ -64,4 +64,8 @@ foldl' f z (x:xs) = foldl' f (f z x) xs
 -- concat' [1,2] [3] == [1,2,3]
 concat' :: [a] -> [a] -> [a]
 concat' [] xs     = xs
+<<<<<<< HEAD
 concat' (x:xs) ys = x:concat' xs ys
+=======
+concat' (x:xs) ys = x:concat' xs ys
+>>>>>>> 0fd415f0b602b871e942efbbc649e68ba2a15667
