@@ -31,14 +31,14 @@ drop' n (x:xs) = drop' (n - 1) xs
 -- 5. filter' возвращает список из элементов, для которых f возвращает True
 filter' :: (a -> Bool) -> [a] -> [a]
 filter' f [] = []
-filter' f (x:xs) | f x = x:filter' f xs
+filter' f (x:xs) | f x       = x:filter' f xs
                  | otherwise = filter' f xs
 
 -- 6. zip' принимает два списка [a1, a2, ...] и [b1, b2, ...] и возвращает список [(a1, b1), (a2, b2), ...].
 -- Размер итогого списка равен размеру меньшего из входных списков.
 zip' :: [a] -> [b] -> [(a, b)]
-zip' [] _          = []
-zip' _ []          = []
+zip' []     _      = []
+zip' _      []     = []
 zip' (x:xs) (y:ys) = (x, y):zip' xs ys
 
 -- 7. map' принимает на вход функцию и список и применяет функцию ко всем элементам списка
@@ -63,5 +63,5 @@ foldl' f z (x:xs) = foldl' f (f z x) xs
 -- 10. concat' принимает на вход два списка и возвращает их конкатенацию
 -- concat' [1,2] [3] == [1,2,3]
 concat' :: [a] -> [a] -> [a]
-concat' [] xs     = xs
+concat' []     xs = xs
 concat' (x:xs) ys = x:concat' xs ys
