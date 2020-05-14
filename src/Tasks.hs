@@ -66,5 +66,5 @@ foldl' f x (y:ys) = foldl' f (f x y) ys
 -- concat' [1,2] [3] == [1,2,3]
 concat' :: [a] -> [a] -> [a]
 concat' []     xs = xs
-concat' (x:xs) ys = (x) : concat' xs ys
+concat' (x:xs) ys = x : concat' xs ys
 
