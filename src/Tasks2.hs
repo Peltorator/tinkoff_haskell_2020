@@ -24,7 +24,7 @@ n'th_prime :: Int -> Int
 n'th_prime = get 2 
     where 
         get x (-1) = x - 1
-        get x    n = get (x + 1) (n - check 2 x) 
+        get x    n = get (x + 1) $ n - (check 2 x)
         check i x | i * i > x      = 1
                   | (mod x i == 0) = 0
                   | otherwise      = check (i + 1) x
@@ -48,7 +48,7 @@ tails' = foldr merge [[]]
 inits' :: [a] -> [[a]]
 inits' = foldr merge [[]]
     where
-        merge x y = [[]] ++ map (\z -> x:z) y
+        merge x y = []:(map (\z -> x:z) y)
 
 -- 15. reverse' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldr.
