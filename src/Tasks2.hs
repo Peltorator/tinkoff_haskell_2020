@@ -11,15 +11,20 @@ module Tasks2 where
 -- то есть если на входе был список [[x1, x2, x3, x4], [y1, y2, y3], [z1, z2, z3, z4, z5]],
 -- то итоговым результатом должен быть сисок [x1 + y1 + z1, x2 + y2 + z2, x2 + y3 + z3].
 sum_of_lists :: Num a => [[a]] -> [a]
-sum_of_lists (x:[]) = x
-sum_of_lists (x:xs) = zipWith (+) x (sum_of_lists xs)
+sum_of_lists = foldr merge allzer
+    where 
+        allzer :: Num a => [a]
+        allzer = 0:allzer
+        merge []     _      = []
+        merge _      []     = []
+        merge (x:xs) (y:ys) = (x+y):(merge xs ys)
 
 -- 12. n'thPrime принимает на вход число n >= 0 и возвращает n-е простое число.
 n'th_prime :: Int -> Int
-n'th_prime n = get (n + 1) 2
+n'th_prime = get 2 
     where 
-        get 0 x = x - 1
-        get n x = get (n - check 2 x) (x + 1)
+        get x (-1) = x - 1
+        get x    n = get (x + 1) (n - check 2 x) 
         check i x | i * i > x      = 1
                   | (mod x i == 0) = 0
                   | otherwise      = check (i + 1) x
@@ -32,7 +37,7 @@ n'th_prime n = get (n + 1) 2
 tails' :: [a] -> [[a]]
 tails' = foldr merge [[]]
     where 
-        merge x y = [[x] ++ get_ft y] ++ y
+        merge x y = (x:get_ft y):y
         get_ft [[]]   = []
         get_ft (x:xs) = head x : get_ft xs
 
@@ -43,7 +48,7 @@ tails' = foldr merge [[]]
 inits' :: [a] -> [[a]]
 inits' = foldr merge [[]]
     where
-        merge x y = [[]] ++ map (\z -> [x] ++ z) y
+        merge x y = [[]] ++ map (\z -> x:z) y
 
 -- 15. reverse' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldr.
@@ -53,7 +58,4 @@ reverse' = foldr (\x y -> y ++ [x]) []
 -- 16. reverse'' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldl.
 reverse'' :: [a] -> [a]
-reverse'' = foldl (\x y -> [y] ++ x) []
-{-reverse'' x  = foldl merge [] 
-    where 
-    	merge x y = [x] (++) y-}
+reverse'' = foldl (\x y -> y:x) []
