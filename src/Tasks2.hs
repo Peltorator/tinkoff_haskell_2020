@@ -19,15 +19,11 @@ sum_of_lists = foldr (zipWith (+)) zeros
 
 
 n'th_prime :: Int -> Int
-n'th_prime = helper 2 
-    where 
-        helper a (-1)                   = a - 1
-        helper a n     | (is_prime a 2) = helper (a + 1) $ n - 1
-                       | otherwise      = helper (a + 1) n
+n'th_prime = (primes !!)
+    where primes = filter is_prime [2..]
+          is_prime n = not (any (divides n) [2..(n `div` 2)]) 
+          divides n x = ((n `mod` x) == 0)
 
-        is_prime n i | (i * i > n)      = True
-                     | (n `mod` i == 0) = False
-                     | otherwise        = is_prime n $ i + 1
 -- 13. tails' возвращает все хвосты входного списка,
 -- то есть если на входе был список [1, 2, 3],
 -- то итоговым результатом должен быть список [[1, 2, 3], [2, 3], [3], []]
