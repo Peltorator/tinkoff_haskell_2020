@@ -17,12 +17,11 @@ sum_of_lists = foldr (zipWith (+)) zeros
 
 -- 12. n'thPrime принимает на вход число n >= 0 и возвращает n-е простое число.
 
-
 n'th_prime :: Int -> Int
-n'th_prime = (primes !!)
-    where primes = filter is_prime [2..]
-          is_prime n = not (any (divides n) [2..(n `div` 2)]) 
-          divides n x = ((n `mod` x) == 0)
+n'th_prime =  (primes !!)
+    where primes = 2 : filter is_prime [3..]
+          is_prime n = not $ any (divides n) [2..(ceiling (sqrt (fromIntegral n)))]
+          divides n x = n `mod` x == 0
 
 -- 13. tails' возвращает все хвосты входного списка,
 -- то есть если на входе был список [1, 2, 3],
