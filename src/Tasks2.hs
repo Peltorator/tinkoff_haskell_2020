@@ -15,9 +15,9 @@ sum_of_lists = foldr (zipWith (+)) (repeat 0)
 
 -- 12. n'thPrime принимает на вход число n >= 0 и возвращает n-е простое число.
 
-primes = [x | x <- [2..], [y | y <- takeWhile ((x >=) . (^ 2)) [2..], (mod x y == 0)] == []]
 n'th_prime :: Int -> Int
 n'th_prime = (primes !!)
+             where primes = [x | x <- [2..], [y | y <- takeWhile ((x >=) . (^ 2)) [2..], (mod x y == 0)] == []]
 
 -- 13. tails' возвращает все хвосты входного списка,
 -- то есть если на входе был список [1, 2, 3],
@@ -40,7 +40,8 @@ inits' = foldr push_front [[]]
 -- 15. reverse' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldr.
 reverse' :: [a] -> [a]
-reverse' = foldr (flip (++) . return) ([])
+reverse' = (foldr (flip (++)) []) . (fmap (:[]))
+-- reverse' = foldr (flip (++) . return) ([])
 
 -- 16. reverse'' переворачивает список, который был дан на входе.
 -- Необходимо реализовать функцию при помощи foldl.
