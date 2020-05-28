@@ -99,30 +99,30 @@ treeSum' = foldr (+) 0
 data MyList a = Empty | Cons a (MyList a)
     deriving Show
 
--- 25. Сделайте MyList представителем класса типов Eq.
+-- 26. Сделайте MyList представителем класса типов Eq.
 instance Eq a => Eq (MyList a) where
     (==) Empty       Empty       = True
     (==) (Cons x xs) (Cons y ys) = (x == y && xs == ys)
     (==) _           _           = False
 
--- 26. Сделайте MyList представителем класса типов Ord. Достаточно реализовать оператор (<=).
+-- 27. Сделайте MyList представителем класса типов Ord. Достаточно реализовать оператор (<=).
 instance Ord a => Ord (MyList a) where
     (<=) (Cons x xs) (Cons y ys) = (x < y || (x == y && xs <= ys))
     (<=) Empty       Empty       = True
     (<=) _           Empty       = False
     (<=) Empty       _           = True
 
--- 27. Сделайте MyList представителем класса типов Foldable.
+-- 28. Сделайте MyList представителем класса типов Foldable.
 instance Foldable MyList where
     foldr f z Empty       = z
     foldr f z (Cons x xs) = f x (foldr f z xs)
 
--- 28. Сделайте MyList представителем класса типов Functor.
+-- 29. Сделайте MyList представителем класса типов Functor.
 instance Functor MyList where
     fmap f Empty       = Empty
     fmap f (Cons x xs) = Cons (f x) (fmap f xs)
 
--- 29. sum2D вычисляет сумму элементов двумерного списка.
+-- 30. sum2D вычисляет сумму элементов двумерного списка.
 -- Используйте реализованные выше instance'ы, чтобы сделать все в бесточечном стиле.
 sum2D :: Num a => MyList (MyList a) -> a
 sum2D = foldr (+) 0 . fmap (foldr (+) 0)
