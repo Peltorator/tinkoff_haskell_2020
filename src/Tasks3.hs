@@ -12,7 +12,9 @@ data Person = Person { firstName :: String, lastName :: String, age :: Int }
 -- Однако если имя было короче двух символов, то оно не меняется.
 -- P.S. Если что, строка -- список символов.
 abbrFirstName :: Person -> Person
-abbrFirstName = undefined
+abbrFirstName a = a { firstName = shorten (firstName a) }
+    where   shorten []     = []
+            shorten (x:xs) = if (null xs) then [x] else (x:".")
 
 
 -- Определим наше дерево, которое мы далее будем использовать:
@@ -22,17 +24,23 @@ data Tree a = Nil | Node (Tree a) a (Tree a)
 
 -- 18. Функция treeSum вычисляет сумму элементов дерва.
 treeSum :: Tree Integer -> Integer
-treeSum = undefined
+treeSum Nil                = 0
+treeSum (Node (vl) a (vr)) = a + (treeSum vl) + (treeSum vr)
 
 
 -- 19. Функция treeHeight вычисляет максимальную высоту дерева.
 treeHeight :: Tree a -> Int
-treeHeight = undefined
+treeHeight Nil                = 0
+treeHeight (Node (vl) a (vr)) = max (treeHeight vl) (treeHeight vr) + 1
 
 
 -- 20. Сделайте Tree представителем класса типов Eq.
 instance Eq a => Eq (Tree a) where
-    (==) = undefined
+    (==) Nil Nil                                   = True
+    (==) Nil _                                     = False
+    (==) _ Nil                                     = False
+    (==) (Node (vl1) a (vr1)) (Node (vl2) b (vr2)) =
+        (a == b) && (vl1 == vl2) && (vr1 == vr2)
 
 -- Для реализации свертки двоичных деревьев нужно выбрать алгоритм обхода узлов дерева.
 -- Сделайте дерево представителем класса типов Foldable несколькими способами.
@@ -52,23 +60,38 @@ newtype Levelorder a = LevelO (Tree a) deriving (Eq, Show)
 --
 -- 21.
 instance Foldable Tree where
-    foldr = undefined
+    foldr f z Nil          = z
+    foldr f z (Node l a r) = foldr f (f a (foldr f z r)) l
 
 -- 22.
 instance Foldable Preorder where
-    foldr = undefined
+    foldr f z (PreO Nil)          = z
+    foldr f z (PreO (Node l a r)) = f a (foldr f (foldr f z (PreO r)) (PreO l))
 
 -- 23.
 instance Foldable Postorder where
-    foldr = undefined
+    foldr f z (PostO Nil)          = z
+    foldr f z (PostO (Node l a r)) = foldr f (foldr f (f a z) (PostO r)) (PostO l)
 
 -- 24.
+
+childList []                          = []
+childList ((LevelO Nil):arr)          = childList arr
+childList ((LevelO (Node l _ r)):arr) = (LevelO l):(LevelO r):(childList arr)
+
+valueList [] = []
+valueList ((LevelO Nil):arr)          = (valueList arr)
+valueList ((LevelO (Node _ a _)):arr) = a:(valueList arr)
+
+foldrLayer f z []    = z
+foldrLayer f z layer = foldr f (foldrLayer f z (childList layer)) (valueList layer)
+
 instance Foldable Levelorder where
-    foldr = undefined
+    foldr f z node = foldrLayer f z [node]
 
 -- 25. treeSum' вычисляет сумму элементов дерева. Примените foldr.
 treeSum' :: Tree Integer -> Integer
-treeSum' = undefined
+treeSum' = foldr (+) 0
 
 
 
@@ -78,21 +101,28 @@ data MyList a = Empty | Cons a (MyList a)
 
 -- 25. Сделайте MyList представителем класса типов Eq.
 instance Eq a => Eq (MyList a) where
-    (==) = undefined
+    (==) Empty       Empty       = True
+    (==) (Cons x xs) (Cons y ys) = (x == y && xs == ys)
+    (==) _           _           = False
 
 -- 26. Сделайте MyList представителем класса типов Ord. Достаточно реализовать оператор (<=).
 instance Ord a => Ord (MyList a) where
-    (<=) = undefined
+    (<=) (Cons x xs) (Cons y ys) = (x < y || (x == y && xs <= ys))
+    (<=) Empty       Empty       = True
+    (<=) _           Empty       = False
+    (<=) Empty       _           = True
 
 -- 27. Сделайте MyList представителем класса типов Foldable.
 instance Foldable MyList where
-    foldr = undefined
+    foldr f z Empty       = z
+    foldr f z (Cons x xs) = f x (foldr f z xs)
 
 -- 28. Сделайте MyList представителем класса типов Functor.
 instance Functor MyList where
-    fmap = undefined
+    fmap f Empty       = Empty
+    fmap f (Cons x xs) = Cons (f x) (fmap f xs)
 
 -- 29. sum2D вычисляет сумму элементов двумерного списка.
 -- Используйте реализованные выше instance'ы, чтобы сделать все в бесточечном стиле.
 sum2D :: Num a => MyList (MyList a) -> a
-sum2D = undefined
+sum2D = foldr (+) 0 . fmap (foldr (+) 0)
