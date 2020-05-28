@@ -76,23 +76,23 @@ treeSum' = undefined
 data MyList a = Empty | Cons a (MyList a)
     deriving Show
 
--- 25. Сделайте MyList представителем класса типов Eq.
+-- 26. Сделайте MyList представителем класса типов Eq.
 instance Eq a => Eq (MyList a) where
     (==) = undefined
 
--- 26. Сделайте MyList представителем класса типов Ord. Достаточно реализовать оператор (<=).
+-- 27. Сделайте MyList представителем класса типов Ord. Достаточно реализовать оператор (<=).
 instance Ord a => Ord (MyList a) where
     (<=) = undefined
 
--- 27. Сделайте MyList представителем класса типов Foldable.
+-- 28. Сделайте MyList представителем класса типов Foldable.
 instance Foldable MyList where
     foldr = undefined
 
--- 28. Сделайте MyList представителем класса типов Functor.
+-- 29. Сделайте MyList представителем класса типов Functor.
 instance Functor MyList where
     fmap = undefined
 
--- 29. sum2D вычисляет сумму элементов двумерного списка.
+-- 30. sum2D вычисляет сумму элементов двумерного списка.
 -- Используйте реализованные выше instance'ы, чтобы сделать все в бесточечном стиле.
 sum2D :: Num a => MyList (MyList a) -> a
 sum2D = undefined
