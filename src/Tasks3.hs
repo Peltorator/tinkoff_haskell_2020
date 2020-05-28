@@ -12,12 +12,9 @@ data Person = Person { firstName :: String, lastName :: String, age :: Int }
 -- Однако если имя было короче двух символов, то оно не меняется.
 -- P.S. Если что, строка -- список символов.
 abbrFirstName :: Person -> Person
-abbrFirstName p = Person (let name = firstName p in
-                              if length name > 1
-                              then head name : "."
-                              else name)
-                         (lastName p) 
-                         (age p)
+abbrFirstName (Person firstName lastName age) = Person (if length firstName > 1 then head firstName : "." else firstName)
+                                                       lastName 
+                                                       age
 
 
 -- Определим наше дерево, которое мы далее будем использовать:
@@ -39,10 +36,10 @@ treeHeight (Node left _ right) = max (treeHeight left) (treeHeight right) + 1
 
 -- 20. Сделайте Tree представителем класса типов Eq.
 instance Eq a => Eq (Tree a) where
-    (==) Nil Nil                                           = True
-    (==) Nil _                                             = False
-    (==) _ Nil                                             = False
-    (==) (Node left1 val1 right1) (Node left2 val2 right2) = (val1 == val2) && (left1 == left2) && (right1 == right2)
+    (==) (Node left1 val1 right1) (Node left2 val2 right2) = val1 == val2 && left1 == left2 && right1 == right2
+    (==) Nil                      Nil                      = True
+    (==) _                        _                        = False
+    
 
 -- Для реализации свертки двоичных деревьев нужно выбрать алгоритм обхода узлов дерева.
 -- Сделайте дерево представителем класса типов Foldable несколькими способами.
@@ -80,7 +77,10 @@ instance Foldable Postorder where
 instance Foldable Levelorder where
     foldr f init (LevelO t) = foldr f init (concat (levels t))
         where levels Nil                   = [[]]
-              levels (Node left val right) = [val] : take (max (treeHeight left) (treeHeight right)) (zipWith (++) (levels left ++ repeat []) (levels right ++ repeat []))
+              levels (Node left val right) = [val] : zipWithMore (++) (levels left) (levels right)
+                    where zipWithMore f []     y      = y
+                          zipWithMore f x      []     = x
+                          zipWithMore f (x:xs) (y:ys) = f x y : zipWithMore f xs ys
 
 -- 25. treeSum' вычисляет сумму элементов дерева. Примените foldr.
 treeSum' :: Tree Integer -> Integer
@@ -94,20 +94,17 @@ data MyList a = Empty | Cons a (MyList a)
 
 -- 25. Сделайте MyList представителем класса типов Eq.
 instance Eq a => Eq (MyList a) where
-    (==) Empty Empty               = True
-    (==) Empty _                   = False
-    (==) _ Empty                   = False
-    (==) (Cons a1 b1) (Cons a2 b2) = (a1 == a2) && (b1 == b2)
+    (==) (Cons a1 b1) (Cons a2 b2) = a1 == a2 && b1 == b2
+    (==) Empty        Empty        = True
+    (==) _            _            = False
+  
 
 -- 26. Сделайте MyList представителем класса типов Ord. Достаточно реализовать оператор (<=).
 instance Ord a => Ord (MyList a) where
-    (<=) Empty Empty  = True
-    (<=) Empty _      = True
-    (<=) _ Empty      = False
-    (<=) (Cons a1 b1) (Cons a2 b2)
-          | a1 > a2   = False
-          | a1 < a2   = True
-          | otherwise = b1 <= b2
+    (<=) (Cons a1 b1) (Cons a2 b2) = (a1 < a2) || (a1 == a2 && b1 <= b2)
+    (<=) Empty        _            = True
+    (<=) _            Empty        = False
+    
 
 -- 27. Сделайте MyList представителем класса типов Foldable.
 instance Foldable MyList where
