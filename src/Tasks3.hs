@@ -75,14 +75,6 @@ instance Foldable Postorder where
 
 -- 24.
 
--- childList []                          = []
--- childList ((LevelO Nil):arr)          = childList arr
--- childList ((LevelO (Node l _ r)):arr) = (LevelO l):(LevelO r):(childList arr)
-
--- valueList [] = []
--- valueList ((LevelO Nil):arr)          = (valueList arr)
--- valueList ((LevelO (Node _ a _)):arr) = a:(valueList arr)
-
 instance Foldable Levelorder where
     foldr f z (LevelO Nil) = z
     foldr f z x            = foldrLayer f z [x]
