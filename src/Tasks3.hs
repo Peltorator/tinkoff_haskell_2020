@@ -13,8 +13,9 @@ data Person = Person { firstName :: String, lastName :: String, age :: Int }
 -- P.S. Если что, строка -- список символов.
 abbrFirstName :: Person -> Person
 abbrFirstName a = a { firstName = shorten (firstName a) }
-    where   shorten []     = []
-            shorten (x:xs) = if (null xs) then [x] else (x:".")
+    where   shorten []    = []
+            shorten [x]   = [x]
+            shorten (x:_) = (x:".")
 
 
 -- Определим наше дерево, которое мы далее будем использовать:
@@ -24,23 +25,22 @@ data Tree a = Nil | Node (Tree a) a (Tree a)
 
 -- 18. Функция treeSum вычисляет сумму элементов дерва.
 treeSum :: Tree Integer -> Integer
-treeSum Nil                = 0
-treeSum (Node (vl) a (vr)) = a + (treeSum vl) + (treeSum vr)
+treeSum Nil            = 0
+treeSum (Node vl a vr) = a + (treeSum vl) + (treeSum vr)
 
 
 -- 19. Функция treeHeight вычисляет максимальную высоту дерева.
 treeHeight :: Tree a -> Int
-treeHeight Nil                = 0
-treeHeight (Node (vl) a (vr)) = max (treeHeight vl) (treeHeight vr) + 1
+treeHeight Nil            = 0
+treeHeight (Node vl a vr) = max (treeHeight vl) (treeHeight vr) + 1
 
 
 -- 20. Сделайте Tree представителем класса типов Eq.
 instance Eq a => Eq (Tree a) where
-    (==) Nil Nil                                   = True
-    (==) Nil _                                     = False
-    (==) _ Nil                                     = False
-    (==) (Node (vl1) a (vr1)) (Node (vl2) b (vr2)) =
-        (a == b) && (vl1 == vl2) && (vr1 == vr2)
+    (==) Nil              Nil              = True
+    (==) (Node vl1 a vr1) (Node vl2 b vr2) =
+        a == b && vl1 == vl2 && vr1 == vr2
+    (==) _                _                = False
 
 -- Для реализации свертки двоичных деревьев нужно выбрать алгоритм обхода узлов дерева.
 -- Сделайте дерево представителем класса типов Foldable несколькими способами.
@@ -60,17 +60,17 @@ newtype Levelorder a = LevelO (Tree a) deriving (Eq, Show)
 --
 -- 21.
 instance Foldable Tree where
-    foldr f z Nil          = z
+    foldr _ z Nil          = z
     foldr f z (Node l a r) = foldr f (f a (foldr f z r)) l
 
 -- 22.
 instance Foldable Preorder where
-    foldr f z (PreO Nil)          = z
+    foldr _ z (PreO Nil)          = z
     foldr f z (PreO (Node l a r)) = f a (foldr f (foldr f z (PreO r)) (PreO l))
 
 -- 23.
 instance Foldable Postorder where
-    foldr f z (PostO Nil)          = z
+    foldr _ z (PostO Nil)          = z
     foldr f z (PostO (Node l a r)) = foldr f (foldr f (f a z) (PostO r)) (PostO l)
 
 -- 24.
@@ -102,27 +102,26 @@ data MyList a = Empty | Cons a (MyList a)
 -- 26. Сделайте MyList представителем класса типов Eq.
 instance Eq a => Eq (MyList a) where
     (==) Empty       Empty       = True
-    (==) (Cons x xs) (Cons y ys) = (x == y && xs == ys)
+    (==) (Cons x xs) (Cons y ys) = x == y && xs == ys
     (==) _           _           = False
 
 -- 27. Сделайте MyList представителем класса типов Ord. Достаточно реализовать оператор (<=).
 instance Ord a => Ord (MyList a) where
-    (<=) (Cons x xs) (Cons y ys) = (x < y || (x == y && xs <= ys))
-    (<=) Empty       Empty       = True
-    (<=) _           Empty       = False
-    (<=) Empty       _           = True
+    (<=) (Cons _ _)  Empty       = False
+    (<=) (Cons x xs) (Cons y ys) = x < y || (x == y && xs <= ys)
+    (<=) _           _           = True
 
 -- 28. Сделайте MyList представителем класса типов Foldable.
 instance Foldable MyList where
-    foldr f z Empty       = z
+    foldr _ z Empty       = z
     foldr f z (Cons x xs) = f x (foldr f z xs)
 
 -- 29. Сделайте MyList представителем класса типов Functor.
 instance Functor MyList where
-    fmap f Empty       = Empty
+    fmap _ Empty       = Empty
     fmap f (Cons x xs) = Cons (f x) (fmap f xs)
 
 -- 30. sum2D вычисляет сумму элементов двумерного списка.
 -- Используйте реализованные выше instance'ы, чтобы сделать все в бесточечном стиле.
 sum2D :: Num a => MyList (MyList a) -> a
-sum2D = foldr (+) 0 . fmap (foldr (+) 0)
+sum2D = sum . fmap sum
