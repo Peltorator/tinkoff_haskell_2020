@@ -75,19 +75,24 @@ instance Foldable Postorder where
 
 -- 24.
 
-childList []                          = []
-childList ((LevelO Nil):arr)          = childList arr
-childList ((LevelO (Node l _ r)):arr) = (LevelO l):(LevelO r):(childList arr)
+-- childList []                          = []
+-- childList ((LevelO Nil):arr)          = childList arr
+-- childList ((LevelO (Node l _ r)):arr) = (LevelO l):(LevelO r):(childList arr)
 
-valueList [] = []
-valueList ((LevelO Nil):arr)          = (valueList arr)
-valueList ((LevelO (Node _ a _)):arr) = a:(valueList arr)
-
-foldrLayer f z []    = z
-foldrLayer f z layer = foldr f (foldrLayer f z (childList layer)) (valueList layer)
+-- valueList [] = []
+-- valueList ((LevelO Nil):arr)          = (valueList arr)
+-- valueList ((LevelO (Node _ a _)):arr) = a:(valueList arr)
 
 instance Foldable Levelorder where
-    foldr f z node = foldrLayer f z [node]
+    foldr f z (LevelO Nil) = z
+    foldr f z x            = foldrLayer f z [x]
+        where
+            foldrLayer f z []    = z
+            foldrLayer f z layer = foldr f (foldrLayer f z (concat (map getAliveChildren layer))) (map getValue layer)
+            getValue (LevelO (Node _ a _)) = a
+            getAliveChildren (LevelO (Node l _ r)) = [(LevelO ch) | ch <- [l, r], (notNil ch)]
+            notNil (Nil) = False
+            notNil _     = True
 
 -- 25. treeSum' вычисляет сумму элементов дерева. Примените foldr.
 treeSum' :: Tree Integer -> Integer
